@@ -1,5 +1,4 @@
-import sys
-
+from app.notifier_type.discord import discord_notification
 from settings import Settings
 
 
@@ -12,11 +11,8 @@ def run_notifier(settings: Settings) -> int:
     :return: software exit code
     :rtype: int
     """
-    print("webhook: ", settings.webhook_url)
-    if not settings.webhook_url:
-        print("DISCORD_WEBHOOK_URL is required.", file=sys.stderr)
-        return 1
 
-    print("Notification sent.")
+    if settings.discord_webhook_url:
+        return discord_notification(settings)
 
     return 0
