@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 import os
 from dataclasses import dataclass
@@ -111,7 +110,7 @@ class NotifyMode(str, Enum):
 @dataclass(frozen=True)
 class Settings:
     # Webhook
-    webhook_url: str
+    discord_webhook_url: str
 
     # Report discovery
     report_dir: Path | None
@@ -155,7 +154,7 @@ class Settings:
         :rtype: Settings
         """
         # Read raw envs once
-        webhook_url = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+        discord_webhook_url = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
         # Report paths
         report_dir_raw = os.getenv("REPORT_DIR", "").strip()
@@ -211,7 +210,7 @@ class Settings:
             report_html_name = report_dir / report_html_name
 
         return Settings(
-            webhook_url=webhook_url,
+            discord_webhook_url=discord_webhook_url,
             report_dir=report_dir,
             report_json_name=report_json_name,
             report_html_name=report_html_name,
