@@ -145,6 +145,12 @@ class Settings:
     # Buttons
     buttons: List[str]
 
+    # Links
+    html_url: str | None
+    zip_url: str | None
+    pipeline_url: str | None
+    repo_url: str | None
+
     # Severity helpers
     severity_order: List[str]
     severity_rank: dict[str, int]
@@ -213,6 +219,12 @@ class Settings:
         severity_order = ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
         severity_rank = {s: i for i, s in enumerate(severity_order)}
 
+        # Links
+        html_url = None
+        zip_url = None
+        pipeline_url = None
+        repo_url = None
+
         # Paths resolved relative to report_dir if provided
         report_json = Path(report_json)
         report_html = Path(report_html)
@@ -246,6 +258,11 @@ class Settings:
             buttons=buttons,
             severity_order=severity_order,
             severity_rank=severity_rank,
+            html_url=html_url,
+            zip_url=zip_url,
+            pipeline_url=pipeline_url,
+            repo_url=repo_url,
+        )
 
     @classmethod
     def get_instance(cls) -> 'Settings':
