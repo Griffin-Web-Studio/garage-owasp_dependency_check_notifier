@@ -114,8 +114,8 @@ class Settings:
 
     # Report discovery
     report_dir: Path | None
-    report_json_name: Path
-    report_html_name: Path
+    report_json: Path
+    report_html: Path
 
     # Behaviour
     min_severity: Severity
@@ -202,18 +202,18 @@ class Settings:
         severity_rank = {s: i for i, s in enumerate(severity_order)}
 
         # Paths resolved relative to report_dir if provided
-        report_json_name = Path(report_json)
-        report_html_name = Path(report_html)
+        report_json = Path(report_json)
+        report_html = Path(report_html)
 
         if report_dir:
-            report_json_name = report_dir / report_json_name
-            report_html_name = report_dir / report_html_name
+            report_json = report_dir / report_json
+            report_html = report_dir / report_html
 
         return Settings(
             discord_webhook_url=discord_webhook_url,
             report_dir=report_dir,
-            report_json_name=report_json_name,
-            report_html_name=report_html_name,
+            report_json=report_json,
+            report_html=report_html,
             min_severity=min_severity,
             notify_mode=notify_mode,
             attach_html=attach_html,
