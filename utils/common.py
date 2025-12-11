@@ -1,5 +1,7 @@
 import sys
 
+from settings import Settings
+
 
 def log(*args: str):
     """
@@ -8,7 +10,8 @@ def log(*args: str):
     :param args: log string
     :type args: str
     """
-    print(*args)
+    if not Settings.get_instance().quiet:
+        print(*args)
 
 
 def err(*args: str):
@@ -18,4 +21,5 @@ def err(*args: str):
     :param args: error string
     :type args: str
     """
-    print(*args, file=sys.stderr)
+    if not Settings.get_instance().quiet:
+        print(*args, file=sys.stderr)
