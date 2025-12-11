@@ -1,21 +1,21 @@
 import sys
 
 
-def log(str: str):
+def log(*args: str):
     """
     Print log
 
-    :param str: log string
-    :type str: str
+    :param args: log string
+    :type args: str
     """
-    print(str)
+    print(*args)
 
 
-def err(str: str):
+def err(*args: str):
     """
     Print err
 
-    :param str: error string
-    :type str: str
+    :param args: error string
+    :type args: str
     """
-    print(str, file=sys.stderr)
+    print(*args, file=sys.stderr)
