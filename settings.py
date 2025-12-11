@@ -109,6 +109,10 @@ class NotifyMode(str, Enum):
 
 @dataclass(frozen=True)
 class Settings:
+
+    # instance tracker
+    _instance = None
+
     # Webhook
     discord_webhook_url: str
 
@@ -144,6 +148,14 @@ class Settings:
     # Severity helpers
     severity_order: List[str]
     severity_rank: dict[str, int]
+
+    # i am singleton
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(cls, 'instance'):
+            cls._instance = super(Settings, cls).__new__(cls)
+            cls._instance.__init__(*args, **kwargs)
+
+        return cls._instance
 
     @staticmethod
     def from_env() -> Settings:
@@ -234,4 +246,11 @@ class Settings:
             buttons=buttons,
             severity_order=severity_order,
             severity_rank=severity_rank,
-        )
+
+    @classmethod
+    def get_instance(cls) -> 'Settings':
+        if cls._instance is None:
+            raise ValueError(
+                "Settings not initialized. Call from_env() first.")
+
+        return cls._instance
