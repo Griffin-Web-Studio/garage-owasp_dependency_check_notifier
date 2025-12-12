@@ -1,4 +1,5 @@
 # Application Specific
+data/
 dependency-check-report.json
 Dependency-Check Report.html
 
