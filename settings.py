@@ -222,8 +222,40 @@ class Settings:
         # Links
         html_url = None
         zip_url = None
-        pipeline_url = None
-        repo_url = None
+
+        if (
+            ci_project_url and
+            ci_commit_ref_name and
+            artifact_job_name
+        ):
+            html_url = (
+                f"{ci_project_url}/-/jobs/artifacts/"
+                f"{ci_commit_ref_name}/file/"
+                f"{report_html}?job="
+                f"{artifact_job_name}"
+            )
+
+        if (
+            ci_api_v4_url and
+            ci_project_id and
+            ci_commit_ref_name and
+            artifact_job_name
+        ):
+            zip_url = (
+                f"{ci_api_v4_url}/projects/"
+                f"{ci_project_id}/jobs/artifacts/"
+                f"{ci_commit_ref_name}/download?job="
+                f"{artifact_job_name}"
+            )
+
+        pipeline_url = ci_pipeline_url or (
+            f"{ci_project_url}/-/pipelines/{ci_pipeline_id}"
+            if ci_project_url and ci_pipeline_id
+            else None
+        )
+
+        repo_url = ci_project_url or (
+            ci_repository_url if ci_repository_url else None)
 
         # Paths resolved relative to report_dir if provided
         report_json = Path(report_json)
