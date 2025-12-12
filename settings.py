@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import List
+from typing import Any, List
 
 
 def _parse_bool(val: str | None, default: bool = False) -> bool:
@@ -156,7 +156,7 @@ class Settings:
     severity_rank: dict[str, int]
 
     # i am singleton
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args: Any, **kwargs: Any):
         if not hasattr(cls, 'instance'):
             cls._instance = super(Settings, cls).__new__(cls)
             cls._instance.__init__(*args, **kwargs)
