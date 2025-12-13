@@ -1,19 +1,31 @@
+from enum import Enum
 from disnake import Colour
 
 
-def state_colours(state: str) -> Colour:
+class State(Enum):
+    OK = "ok"
+    ISSUE = "issue"
+    VULNERABLE = "vulnerable"
+
+
+def state_colours(state: State | None) -> Colour:
     """
     Discord embed colour
 
-    :param state: 'ok' (green), 'issues' (yellow), 'vulns' (red).
-    :type state: str
+    :param state: OK (green), ISSUE (yellow), VULNERABLE (red).
+    :type state: State
     :return: Disnake embed colour
     :rtype: Colour
     """
-    if state == "vulns":
-        return Colour(0xE74C3C)  # red
 
-    if state == "issues":
-        return Colour(0xE1A32A)  # yellow
+    if state == State.VULNERABLE:
+        return Colour.red()
 
-    return Colour(0x2ECC71)      # green
+    elif state == State.ISSUE:
+        return Colour.yellow()
+
+    elif state == State.OK:
+        return Colour.green()
+
+    else:
+        return Colour.blue()
