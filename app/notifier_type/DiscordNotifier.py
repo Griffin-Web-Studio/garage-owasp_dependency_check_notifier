@@ -91,6 +91,21 @@ class DiscordNotifier:
             has_issue: bool,
             project_label: str,
             branch: str) -> str:
+        """
+        Method for generating title based on parser findings
+
+        :param self: ref to class elf
+        :param has_vuln: vulnerabilities found in report?
+        :type has_vuln: bool
+        :param has_issue: parser had issues?
+        :type has_issue: bool
+        :param project_label: Project Label (defaults to project path)
+        :type project_label: str
+        :param branch: project branch
+        :type branch: str
+        :return: new title
+        :rtype: str
+        """
         if has_vuln:
             self._prefix = "🚨 Vulnerabilities detected"
         elif has_issue:
