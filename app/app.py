@@ -18,9 +18,9 @@ def run_notifier(settings: Settings) -> int:
     if settings.report_json.exists():
         # Parse files
         parser = DCParser(settings)
-
-    err("Can't resolve the json report in the path location: ",
-        str(settings.report_json))
+    else:
+        err("Can't resolve the json report in the path location: ",
+            str(settings.report_json))
 
     if settings.discord_webhook_url:
         notifier = DiscordNotifier(settings)
