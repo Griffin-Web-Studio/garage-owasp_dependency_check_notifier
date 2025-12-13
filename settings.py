@@ -65,7 +65,7 @@ class Severity(str, Enum):
     CRITICAL = "CRITICAL"
 
     @classmethod
-    def from_env(cls, value: str | None, default: Severity | None = None
+    def load_env(cls, value: str | None, default: Severity | None = None
                  ) -> Severity:
         if not value:
             return default or cls.LOW
@@ -89,7 +89,7 @@ class NotifyMode(str, Enum):
     PLAIN = "plain"
 
     @classmethod
-    def from_env(cls, value: str | None, default: NotifyMode | None = None
+    def load_env(cls, value: str | None, default: NotifyMode | None = None
                  ) -> NotifyMode:
         if not value:
             return default or cls.BOTH
@@ -164,7 +164,7 @@ class Settings:
         return cls._instance
 
     @staticmethod
-    def from_env() -> Settings:
+    def load_env() -> Settings:
         """
         populate class variables with env var values
 
@@ -184,10 +184,10 @@ class Settings:
             "REPORT_HTML_NAME", "dependency-check-report.html").strip()
 
         # Behaviour
-        min_severity = Severity.from_env(
+        min_severity = Severity.load_env(
             os.getenv("MIN_SEVERITY") or os.getenv("DC_MIN_SEVERITY"),
             Severity.LOW)
-        notify_mode = NotifyMode.from_env(
+        notify_mode = NotifyMode.load_env(
             os.getenv("DC_NOTIFY_MODE"), NotifyMode.BOTH)
         attach_html = _parse_bool(os.getenv("ATTACH_HTML") or os.getenv(
             "DC_ATTACH_HTML"), default=False)
@@ -300,6 +300,6 @@ class Settings:
     def get_instance(cls) -> 'Settings':
         if cls._instance is None:
             raise ValueError(
-                "Settings not initialized. Call from_env() first.")
+                "Settings not initialized. Call load_env() first.")
 
         return cls._instance

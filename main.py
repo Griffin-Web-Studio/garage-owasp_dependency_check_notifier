@@ -20,7 +20,9 @@ def main():
 
     from settings import Settings
 
-    sys.exit(app.run_notifier(Settings.from_env()))
+    settings = Settings.load_env()
+
+    sys.exit(app.run_notifier(settings))
 
 
 if __name__ == "__main__":
