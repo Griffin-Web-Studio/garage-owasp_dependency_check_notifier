@@ -15,9 +15,7 @@ TEMP_URL = "https://griffin-web.studio/"
 class DiscordNotifier:
     _settings: Settings
     _title: str
-    _prefix: str
-    _context: str
-    _suffix: str
+    _desc: str = "Default Embed Description"
     _has_vuln: bool = False
     _has_issue: bool = False
     def __init__(self, settings: Settings):
@@ -31,6 +29,15 @@ class DiscordNotifier:
         self._settings = settings
 
     def notify(self, parser: DCParser | None):
+        # If JSON missing, report an issue
+        if not self._settings.report_json.exists():
+            self._has_issue = True
+            self._has_vuln = False
+            self._desc = (
+                f"Reports missing for `"
+                f"{self._settings.ci_project_path or self._settings.project_label or 'project'}"
+                f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
+            )
         self._title = self._make_title(
             has_vuln=self._has_vuln,
             has_issue=self._has_issue,
@@ -41,7 +48,7 @@ class DiscordNotifier:
 
         embed = disnake.Embed(
             title=self._title,
-            description="Embed Description",
+            description=self._desc,
             url=TEMP_URL,
             color=disnake.Colour.from_rgb(27, 52, 100),
             timestamp=datetime.datetime.now(),
