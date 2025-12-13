@@ -4,6 +4,7 @@ import disnake
 from disnake import SyncWebhook
 
 from app.DCParser import DCParser
+from app.notifier_type.utils import State, state_colours
 from settings import Settings
 from utils.common import log
 
@@ -18,6 +19,7 @@ class DiscordNotifier:
     _desc: str = "Default Embed Description"
     _has_vuln: bool = False
     _has_issue: bool = False
+    _colour = state_colours(State.OK)
 
     def __init__(self, settings: Settings):
         """
@@ -51,7 +53,7 @@ class DiscordNotifier:
             title=self._title,
             description=self._desc,
             url=TEMP_URL,
-            color=disnake.Colour.from_rgb(27, 52, 100),
+            color=self._colour,
             timestamp=datetime.datetime.now(),
         )
 
