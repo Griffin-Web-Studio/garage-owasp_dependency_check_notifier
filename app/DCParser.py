@@ -16,7 +16,7 @@ class DCParser:
         self._settings = settings
         # self._data = self._parse()
 
-    def load_data(self):
+    def _load_data(self):
         """
         Loads the source data. Override this method in subclasses.
         """
