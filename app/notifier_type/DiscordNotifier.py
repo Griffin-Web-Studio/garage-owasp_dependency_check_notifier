@@ -42,7 +42,7 @@ class DiscordNotifier:
         embed = disnake.Embed(
             title=self._title,
             description="Embed Description",
-            url="https://griffin-web.studio/",
+            url=TEMP_URL,
             color=disnake.Colour.from_rgb(27, 52, 100),
             timestamp=datetime.datetime.now(),
         )
