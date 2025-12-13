@@ -18,6 +18,7 @@ class DiscordNotifier:
     _desc: str = "Default Embed Description"
     _has_vuln: bool = False
     _has_issue: bool = False
+
     def __init__(self, settings: Settings):
         """
         Discord Notifier module initialiser for sending out Discord embeds
@@ -113,20 +114,24 @@ class DiscordNotifier:
         :return: new title
         :rtype: str
         """
+        prefix: str = ""
+        context: str = ""
+        suffix: str = ""
+
         if has_vuln:
-            self._prefix = "🚨 Vulnerabilities detected"
+            prefix = "🚨 Vulnerabilities detected"
         elif has_issue:
-            self._prefix = "⚠️ Dependency-Check scan issue"
+            prefix = "⚠️ Dependency-Check scan issue"
         else:
-            self._prefix = "✅ No vulnerabilities detected"
+            prefix = "✅ No vulnerabilities detected"
 
-        self._context = project_label or self._settings.ci_project_path.strip()
+        context = project_label or self._settings.ci_project_path.strip()
 
-        if self._context and branch:
-            self._suffix = f" ({self._context} @ {branch})"
-        elif self._context:
-            self._suffix = f" ({self._context})"
+        if context and branch:
+            suffix = f" ({context} @ {branch})"
+        elif context:
+            suffix = f" ({context})"
         elif branch:
-            self._suffix = f" ({branch})"
+            suffix = f" ({branch})"
 
-        return self._prefix + self._suffix
+        return prefix + suffix
