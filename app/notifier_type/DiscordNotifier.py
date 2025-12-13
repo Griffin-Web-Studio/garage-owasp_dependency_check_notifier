@@ -1,9 +1,9 @@
 from __future__ import annotations
 import datetime
-from typing import Any
 import disnake
 from disnake import SyncWebhook
 
+from app.DCParser import DCParser
 from settings import Settings
 from utils.common import log
 
@@ -30,7 +30,7 @@ class DiscordNotifier:
         """
         self._settings = settings
 
-    def notify(self, data: Any):
+    def notify(self, parser: DCParser | None):
         self._title = self._make_title(
             has_vuln=self._has_vuln,
             has_issue=self._has_issue,

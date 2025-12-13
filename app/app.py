@@ -13,17 +13,18 @@ def run_notifier(settings: Settings) -> int:
     :return: software exit code
     :rtype: int
     """
-    if not settings.report_json.exists():
-        err("Can't resolve the json report in the path location: ",
-            str(settings.report_json))
+    parser = None
 
-        return 1
+    if settings.report_json.exists():
+        # Parse files
+        parser = DCParser(settings)
 
-    # Parse files
-    parsed_data = DCParser(settings)
+    err("Can't resolve the json report in the path location: ",
+        str(settings.report_json))
 
     if settings.discord_webhook_url:
         notifier = DiscordNotifier(settings)
-        return notifier.notify(parsed_data.get_data())
+
+        return notifier.notify(parser)
 
     return 0
