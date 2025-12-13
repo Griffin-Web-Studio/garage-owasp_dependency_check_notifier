@@ -1,0 +1,1 @@
+datamodel-codegen --input-file-type json --input ./data/dependency-check-report.json --output ./app/models/report_models.py
