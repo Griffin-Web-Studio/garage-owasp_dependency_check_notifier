@@ -1,4 +1,4 @@
-from app.notifier_type.discord import discord_notification
+from app.DCParser import DCParser
 from settings import Settings
 from utils.common import err
 
@@ -18,6 +18,9 @@ def run_notifier(settings: Settings) -> int:
             str(settings.report_json))
 
         return 1
+
+    # Parse files
+    parsed_data = DCParser(settings)
 
     if settings.discord_webhook_url:
         return discord_notification(settings)
