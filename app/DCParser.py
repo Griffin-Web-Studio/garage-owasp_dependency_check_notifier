@@ -12,6 +12,7 @@ from utils.common import err
 
 
 class DCParser:
+    _data: Optional[Dict[str, Any]] = None
     _report: Optional[DCModel] = None
     _settings: Settings
 
@@ -21,7 +22,7 @@ class DCParser:
         """
         self._settings = settings
         self._load_data()
-        # self._data = self._parse()
+        self._data = self._parse()
 
     def _load_data(self):
         """
@@ -36,17 +37,72 @@ class DCParser:
                 "known model."
             )
 
-    def _parse(self):
+    def _parse(self) -> Optional[Dict[str, Any]]:
         """
-        Parses the loaded data. Override this method in subclasses.
-        """
-        raise NotImplementedError("Subclasses should implement this method.")
+        Parse OWASP Dependency-Check JSON into a simple structure
 
-    def get_data(self):
+        :param self: ref to class self
+        :return: simplified info
+        :rtype: Optional[Dict[str, Any]]
+        """
+        if not self._report:
+            return None
+
+        dependencies = self._report.dependencies
+        vulns: List[Dict[str, Any]] = []
+
+        for dep in dependencies:
+            dep_name_parts = dep.fileName.split(":")
+            dep_name: str = dep_name_parts[0]
+            dep_version: str = (
+                dep_name_parts[1] if len(dep_name_parts) > 1 else "Unknown")
+
+            for d_vulns in dep.vulnerabilities or []:
+                severity = d_vulns.severity
+                scorev2 = getattr(d_vulns.cvssv2, 'score', 'Unknown')
+                scorev3 = getattr(d_vulns.cvssv3, 'baseScore', 'Unknown')
+                refs = d_vulns.references or []
+                vuln_ids: List[str] = []
+                url = ""
+
+                # Get IDs
+                if d_vulns.name:
+                    vuln_ids.append(d_vulns.name)
+                else:
+                    for vuln_soft in d_vulns.vulnerableSoftware:
+                        vuln_ids.append(vuln_soft.software.id)
+
+                # Get ref URLs
+                if len(refs) > 1:
+                    keywords = ["advisories", "vuln", "detail"]
+                    first_advisory_ref = next(
+                        (ref for ref in refs if any(
+                            keyword in ref.url for keyword in keywords)),
+                        None
+                    )
+                    url = getattr(first_advisory_ref, 'url', "")
+
+                vulns.append({
+                    "dependency": dep_name,
+                    "version": dep_version,
+                    "id": vuln_ids,
+                    "severity": severity,
+                    "scorev2": scorev2,
+                    "scorev3": scorev3,
+                    "url": url,
+                })
+
+        counts = dict.fromkeys(self._settings.severity_order, 0)
+
+        for vuln in vulns:
+            counts[vuln["severity"]] = counts.get(vuln["severity"], 0) + 1
+
+        return {"vulnerabilities": vulns, "counts": counts}
+
+    def get_data(self) -> Dict[str, Any] | None:
         """
         Returns the parsed data.
 
         :return: The parsed data.
         """
-        return None
-        # return self.data
+        return self._data
