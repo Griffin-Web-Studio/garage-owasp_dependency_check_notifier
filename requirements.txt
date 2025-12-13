@@ -1,3 +1,5 @@
 python-dotenv==1.2.1
 requests==2.32.5
 disnake==2.11.0
+pydantic==2.12.5
+datamodel-code-generator==0.43.1
