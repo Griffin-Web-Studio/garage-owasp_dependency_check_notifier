@@ -189,7 +189,7 @@ class Settings:
         # Behaviour
         min_severity = Severity.load_env(
             os.getenv("MIN_SEVERITY") or os.getenv("DC_MIN_SEVERITY"),
-            Severity.LOW).lower()
+            Severity.LOW)
         notify_mode = NotifyMode.load_env(
             os.getenv("DC_NOTIFY_MODE"), NotifyMode.BOTH)
         attach_html = _parse_bool(os.getenv("ATTACH_HTML") or os.getenv(
