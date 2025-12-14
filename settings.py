@@ -66,8 +66,10 @@ class Severity(str, Enum):
     CRITICAL = "CRITICAL"
 
     @classmethod
-    def load_env(cls, value: str | None, default: Severity | None = None
-                 ) -> Severity:
+    def load_env(
+            cls,
+            value: str | None,
+            default: Severity | None = None) -> Severity:
         if not value:
             return default or cls.LOW
 

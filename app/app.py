@@ -16,7 +16,6 @@ def run_notifier(settings: Settings) -> int:
     parser = None
 
     if settings.report_json.exists():
-        # Parse files
         parser = DCParser(settings)
     else:
         err("Can't resolve the json report in the path location: ",
