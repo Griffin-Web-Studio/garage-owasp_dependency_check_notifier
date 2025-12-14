@@ -58,7 +58,7 @@ class DCParser:
                 dep_name_parts[1] if len(dep_name_parts) > 1 else "Unknown")
 
             for d_vulns in dep.vulnerabilities or []:
-                severity = d_vulns.severity
+                severity = d_vulns.severity.lower()
                 scorev2 = getattr(d_vulns.cvssv2, 'score', 'Unknown')
                 scorev3 = getattr(d_vulns.cvssv3, 'baseScore', 'Unknown')
                 refs = d_vulns.references or []

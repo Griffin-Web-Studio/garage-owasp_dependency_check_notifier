@@ -61,6 +61,7 @@ class Severity(str, Enum):
     """
     LOW = "LOW"
     MEDIUM = "MEDIUM"
+    MODERATE = "MODERATE"
     HIGH = "HIGH"
     CRITICAL = "CRITICAL"
 
@@ -186,7 +187,7 @@ class Settings:
         # Behaviour
         min_severity = Severity.load_env(
             os.getenv("MIN_SEVERITY") or os.getenv("DC_MIN_SEVERITY"),
-            Severity.LOW)
+            Severity.LOW).lower()
         notify_mode = NotifyMode.load_env(
             os.getenv("DC_NOTIFY_MODE"), NotifyMode.BOTH)
         attach_html = _parse_bool(os.getenv("ATTACH_HTML") or os.getenv(
@@ -216,7 +217,7 @@ class Settings:
         buttons = [b.strip().lower()
                    for b in buttons_raw.split(",") if b.strip()]
 
-        severity_order = ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+        severity_order = ["low", "medium", "moderate", "high", "critical"]
         severity_rank = {s: i for i, s in enumerate(severity_order)}
 
         # Links
