@@ -41,6 +41,14 @@ class DiscordNotifier:
                 f"{self._settings.ci_project_path or self._settings.project_label or 'project'}"
                 f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
             )
+        filtered = None
+
+        if parser:
+            filtered = parser.filter_by_min_severity(
+                self._settings.min_severity)
+
+        print(filtered)
+
         self._title = self._make_title(
             has_vuln=self._has_vuln,
             has_issue=self._has_issue,
