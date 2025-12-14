@@ -121,3 +121,18 @@ class DCParser:
         :return: The parsed data.
         """
         return self._data
+
+    def filter_by_min_severity(
+            self,
+            min_sev: str) -> Optional[List[Vulnerability]]:
+        vulns = self._data
+        if not vulns:
+            return None
+
+        min_rank = self._settings.severity_rank.get(min_sev, 0)
+
+        return [
+            vuln
+            for vuln in vulns.vulnerabilities
+            if self._settings.severity_rank.get(vuln.severity, 0) >= min_rank
+        ]
