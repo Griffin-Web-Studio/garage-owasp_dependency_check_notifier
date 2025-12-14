@@ -4,11 +4,26 @@ Class holding the primary parsing logic of the OWASP Dependency Checker report
 
 import json
 from typing import Any, Dict, List, Optional
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 from app.models.report_models import DCModel
 
 from settings import Settings
 from utils.common import err
+
+
+class Vulnerability(BaseModel):
+    dependency: str
+    version: str
+    id: List[str]
+    severity: str
+    scorev2: Any | str
+    scorev3: Any | str
+    url: str
+
+
+class DataPack(BaseModel):
+    vulnerabilities: List[Vulnerability]
+    counts: dict[str, int]
 
 
 class DCParser:
