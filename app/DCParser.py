@@ -3,7 +3,7 @@ Class holding the primary parsing logic of the OWASP Dependency Checker report
 """
 
 import json
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 from pydantic import BaseModel, ValidationError
 from app.models.report_models import DCModel
 
@@ -27,7 +27,7 @@ class DataPack(BaseModel):
 
 
 class DCParser:
-    _data: Optional[Dict[str, Any]] = None
+    _data: Optional[DataPack] = None
     _report: Optional[DCModel] = None
     _settings: Settings
 
@@ -52,7 +52,7 @@ class DCParser:
                 "known model."
             )
 
-    def _parse(self) -> Optional[Dict[str, Any]]:
+    def _parse(self) -> Optional[DataPack]:
         """
         Parse OWASP Dependency-Check JSON into a simple structure
 
@@ -64,7 +64,7 @@ class DCParser:
             return None
 
         dependencies = self._report.dependencies
-        vulns: List[Dict[str, Any]] = []
+        vulns: List[Vulnerability] = []
 
         for dep in dependencies:
             dep_name_parts = dep.fileName.split(":")
@@ -97,24 +97,24 @@ class DCParser:
                     )
                     url = getattr(first_advisory_ref, 'url', "")
 
-                vulns.append({
-                    "dependency": dep_name,
-                    "version": dep_version,
-                    "id": vuln_ids,
-                    "severity": severity,
-                    "scorev2": scorev2,
-                    "scorev3": scorev3,
-                    "url": url,
-                })
+                vulns.append(Vulnerability(
+                    dependency=dep_name,
+                    version=dep_version,
+                    id=vuln_ids,
+                    severity=severity,
+                    scorev2=scorev2,
+                    scorev3=scorev3,
+                    url=url,
+                ))
 
         counts = dict.fromkeys(self._settings.severity_order, 0)
 
         for vuln in vulns:
-            counts[vuln["severity"]] = counts.get(vuln["severity"], 0) + 1
+            counts[vuln.severity] = counts.get(vuln.severity, 0) + 1
 
-        return {"vulnerabilities": vulns, "counts": counts}
+        return DataPack(vulnerabilities=vulns, counts=counts)
 
-    def get_data(self) -> Dict[str, Any] | None:
+    def get_data(self) -> Optional[DataPack]:
         """
         Returns the parsed data.
 
