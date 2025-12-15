@@ -8,8 +8,8 @@ from app.notifier_type.utils import State, state_colours
 from settings import Settings
 from utils.common import log
 
-TEMP_ICON = "https://files.gwssecureserver.co.uk/files/gws/logo-outline-ico.png"
-TEMP_BANNER = "https://files.gwssecureserver.co.uk/files/email/v4/offer.png"
+GWS_ICON = "https://files.gwssecureserver.co.uk/files/gws/logo-outline-ico.png"
+# TEMP_BANNER = "https://files.gwssecureserver.co.uk/files/email/v4/offer.png"
 TEMP_URL = "https://griffin-web.studio/"
 
 
@@ -60,23 +60,24 @@ class DiscordNotifier:
         embed = disnake.Embed(
             title=self._title,
             description=self._desc,
-            url=TEMP_URL,
+            url=self._settings.ci_project_url,
             color=self._colour,
             timestamp=datetime.datetime.now(),
         )
 
         embed.set_author(
-            name="Embed Author",
+            name="OWASP | DC Notifier | By GWS Garage",
             url=TEMP_URL,
-            icon_url=self._settings.dc_icon,
-        )
-        embed.set_footer(
-            text="Embed Footer",
-            icon_url=TEMP_ICON,
+            icon_url=GWS_ICON,
         )
 
-        embed.set_thumbnail(url=TEMP_ICON)
-        embed.set_image(url=TEMP_BANNER)
+        # embed.set_footer(
+        #     text="Embed Footer",
+        #     icon_url=TEMP_ICON,
+        # )
+
+        embed.set_thumbnail(url=self._settings.dc_icon)
+        # embed.set_image(url=TEMP_BANNER)
 
         embed.add_field(
             name="Regular Title",
