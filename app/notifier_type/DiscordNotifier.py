@@ -68,7 +68,7 @@ class DiscordNotifier:
         embed.set_author(
             name="Embed Author",
             url=TEMP_URL,
-            icon_url=TEMP_ICON,
+            icon_url=self._settings.dc_icon,
         )
         embed.set_footer(
             text="Embed Footer",

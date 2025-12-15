@@ -115,6 +115,7 @@ class Settings:
 
     # instance tracker
     _instance = None
+    dc_icon: str
 
     # Webhook
     discord_webhook_url: str
@@ -176,6 +177,10 @@ class Settings:
         """
         # Read raw envs once
         discord_webhook_url = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+        dc_icon = os.getenv(
+            "DC_ICON", "https://gitlab.griffin-studio.dev/external-projects/"
+            "garage/owasp-dependency-check-notifier/-/raw/main/static/icons.png"
+            "?ref_type=heads")
 
         # Report paths
         report_dir_raw = os.getenv("REPORT_DIR", "").strip()
@@ -270,6 +275,7 @@ class Settings:
 
         return Settings(
             discord_webhook_url=discord_webhook_url,
+            dc_icon=dc_icon,
             report_dir=report_dir,
             report_json=report_json,
             report_html=report_html,
