@@ -42,12 +42,18 @@ class DiscordNotifier:
                 f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
             )
         filtered = None
+        counts = None
 
         if parser:
+            data_pack = parser.get_data()
+            if data_pack and data_pack.counts:
+                counts = data_pack.counts
             filtered = parser.filter_by_min_severity(
                 self._settings.min_severity)
 
-        print(filtered)
+        if counts and (counts["critical"] > 0 or counts["high"]) > 0:
+            self._colour = state_colours(State.VULNERABLE)
+            self._has_vuln = True
 
         self._title = self._make_title(
             has_vuln=self._has_vuln,
@@ -79,25 +85,24 @@ class DiscordNotifier:
         embed.set_thumbnail(url=self._settings.dc_icon)
         # embed.set_image(url=TEMP_BANNER)
 
-        embed.add_field(
-            name="Regular Title",
-            value="Regular Value",
-            inline=False)
-        embed.add_field(
-            name="Inline Title",
-            value="Inline Value",
-            inline=True
-        )
-        embed.add_field(
-            name="Inline Title",
-            value="Inline Value",
-            inline=True
-        )
-        embed.add_field(
-            name="Inline Title",
-            value="Inline Value",
-            inline=True
-        )
+        if counts:
+            for count in counts:
+                embed.add_field(
+                    name=count.capitalize(),
+                    value=counts[count],
+                    inline=True)
+
+        if filtered:
+            for dep in filtered:
+                embed.add_field(
+                    name=f"{dep.severity.upper()} - {dep.dependency} "
+                    f"(ver: {dep.version}) "
+                    f"CVSSv2:{dep.scorev2} "
+                    f"CVSSv3:{dep.scorev3}",
+                    value=f"""
+                    [{", ".join(dep.ids)}]({dep.url})
+                    """,
+                    inline=False)
 
         webhook.send(embed=embed)
         log("Notification sent.")
