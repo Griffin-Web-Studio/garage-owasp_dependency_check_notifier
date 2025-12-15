@@ -14,7 +14,7 @@ from utils.common import err
 class Vulnerability(BaseModel):
     dependency: str
     version: str
-    id: List[str]
+    ids: List[str]
     severity: str
     scorev2: Any | str
     scorev3: Any | str
@@ -100,7 +100,7 @@ class DCParser:
                 vulns.append(Vulnerability(
                     dependency=dep_name,
                     version=dep_version,
-                    id=vuln_ids,
+                    ids=vuln_ids,
                     severity=severity,
                     scorev2=scorev2,
                     scorev3=scorev3,
@@ -118,7 +118,9 @@ class DCParser:
         """
         Returns the parsed data.
 
+        :param self: ref to class self
         :return: The parsed data.
+        :rtype: DataPack | None
         """
         return self._data
 
