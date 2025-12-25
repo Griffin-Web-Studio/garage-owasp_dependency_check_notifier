@@ -119,7 +119,14 @@ class DiscordNotifier:
                     inline=True)
 
         if filtered:
+            max_embed = 20
+
             for dep in filtered:
+                if max_embed == 0:
+                    break
+
+                max_embed -= 1
+
                 severity = "N/A"
                 cvssv3 = "n/a"
 
