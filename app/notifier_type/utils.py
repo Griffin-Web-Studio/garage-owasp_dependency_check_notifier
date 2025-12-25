@@ -22,7 +22,7 @@ def state_colours(state: State | None) -> Colour:
         return Colour.red()
 
     elif state == State.ISSUE:
-        return Colour.yellow()
+        return Colour.orange()
 
     elif state == State.OK:
         return Colour.green()

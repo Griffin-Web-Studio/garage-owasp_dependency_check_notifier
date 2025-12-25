@@ -78,7 +78,6 @@ class DiscordNotifier:
                 self._settings.min_severity)
 
         if counts and (counts["critical"] > 0 or counts["high"]) > 0:
-            self._colour = state_colours(State.VULNERABLE)
             self._has_vuln = True
 
         self._title = self._make_title(
@@ -186,8 +185,10 @@ class DiscordNotifier:
 
         if has_vuln:
             prefix = "🚨 Vulnerabilities detected"
+            self._colour = state_colours(State.VULNERABLE)
         elif has_issue:
             prefix = "⚠️ Dependency-Check scan issue"
+            self._colour = state_colours(State.ISSUE)
         else:
             prefix = "✅ No vulnerabilities detected"
 
