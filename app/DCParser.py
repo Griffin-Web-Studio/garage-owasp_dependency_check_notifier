@@ -30,6 +30,7 @@ class DCParser:
     _data: Optional[DataPack] = None
     _report: Optional[DCModel] = None
     _settings: Settings
+    failed: bool = False
 
     def __init__(self, settings: Settings):
         """
@@ -51,6 +52,7 @@ class DCParser:
                 "Could not correctly validate the report schema against the",
                 "known model."
             )
+            self.failed = True
 
     def _parse(self) -> Optional[DataPack]:
         """
@@ -92,7 +94,7 @@ class DCParser:
                     keywords = ["advisories", "vuln", "detail"]
                     first_advisory_ref = next(
                         (ref for ref in refs if any(
-                            keyword in ref.url for keyword in keywords)),
+                            keyword in (ref.url or "") for keyword in keywords)),
                         None
                     )
                     url = getattr(first_advisory_ref, 'url', "")
