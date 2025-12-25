@@ -1,10 +1,23 @@
-FROM python:3
+FROM python:3-slim
 
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /app
 
-COPY requirements.txt ./
+# Install system dependencies (if needed)
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     curl && rm -rf /var/lib/apt/lists/*
+
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+
+# Copy the application code
 COPY . .
 
-CMD [ "python", "./your-daemon-or-script.py" ]
+# Define the entrypoint
+ENTRYPOINT ["python", "main.py"]
