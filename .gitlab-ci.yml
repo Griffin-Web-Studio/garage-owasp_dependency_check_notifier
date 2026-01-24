@@ -1,0 +1,7 @@
+# Self test
+
+stages:
+    - dependency_analysis
+
+include:
+  - remote: "https://gitlab.griffin-studio.dev/external-projects/ci-templates/-/raw/main/DC.gitlab-ci.yml"
