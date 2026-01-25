@@ -20,6 +20,7 @@ class DiscordNotifier:
     _has_vuln: bool = False
     _has_issue: bool = False
     _colour = state_colours(State.OK)
+    _has_report: bool = False
 
     def __init__(self, settings: Settings):
         """
@@ -30,17 +31,10 @@ class DiscordNotifier:
         :type settings: Settings
         """
         self._settings = settings
+        # If JSON missing, report an issue
+        self._check_report_presence()
 
     def notify(self, parser: DCParser | None):
-        # If JSON missing, report an issue
-        if not self._settings.report_json.exists():
-            self._has_issue = True
-            self._has_vuln = False
-            self._desc = (
-                f"Reports missing for `"
-                f"{self._settings.ci_project_path or self._settings.project_label or 'project'}"
-                f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
-            )
 
             # fields: List[Tuple[str, str, bool]] = [
             #     ("Pipeline", self._settings.pipeline_url or "N/A", False),
@@ -167,6 +161,25 @@ class DiscordNotifier:
         log("Notification sent.")
 
         return 0
+
+    def _check_report_presence(self) -> None:
+        """
+        Method to determine if report file is present
+
+        :param self: ref to class self
+        """
+        if not self._settings.report_json.exists():
+            self._has_issue = True
+            self._has_vuln = False
+            self._desc = (
+                f"Reports missing for `"
+                f"{self._settings.ci_project_path
+                   or self._settings.project_label
+                   or 'project'}"
+                f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
+            )
+
+        self._has_report = True
 
     def _make_title(
             self,
