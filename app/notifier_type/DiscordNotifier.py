@@ -38,32 +38,6 @@ class DiscordNotifier:
 
     def notify(self, parser: DCParser | None):
 
-            # fields: List[Tuple[str, str, bool]] = [
-            #     ("Pipeline", self._settings.pipeline_url or "N/A", False),
-            #     ("HTML present?", "Yes" if self._settings.report_html else "No", True),
-            #     ("JSON present?", "No", True),
-            # ]
-            # links_field = build_links_field(links)
-            # if links_field:
-            #     fields.append(links_field)
-
-            # embed = build_embed(description=desc, url=links.get(
-            #     "pipeline"), colo
-
-            # r=colour_for_state("issues"), fields=fields)
-
-            # # Decide payload based on NOTIFY_MODE
-            # if NOTIFY_MODE == "plain":
-            #     send_via_disnake(WEBHOOK_URL, content=title + "\n" + desc,
-            #                      embed=None, html_path=html_path if html_exists else None)
-            # else:
-            #     send_via_disnake(WEBHOOK_URL, content=None, embed=embed,
-            #                      html_path=html_path if html_exists else None)
-
-            # log("Sent scan issue notification.")
-            # # Do not fail on missing JSON unless you want to; return 1 for visibility.
-            # return 1
-
         if parser and parser.failed:
             self._has_issue = True
             self._has_vuln = False
