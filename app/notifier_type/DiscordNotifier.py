@@ -16,7 +16,7 @@ TEMP_URL = "https://griffin-web.studio/"
 class DiscordNotifier:
     _settings: Settings
     _title: str
-    _desc: str = "Default Embed Description"
+    _desc: str = ""
     _has_vuln: bool = False
     _has_issue: bool = False
     _colour = state_colours(State.OK)
