@@ -1,7 +1,8 @@
 from __future__ import annotations
 import datetime
+from typing import Optional
 import disnake
-from disnake import SyncWebhook
+from disnake import SyncWebhook, Embed
 
 from app.DCParser import DCParser
 from app.notifier_type.utils import State, state_colours
@@ -20,6 +21,7 @@ class DiscordNotifier:
     _has_vuln: bool = False
     _has_issue: bool = False
     _colour = state_colours(State.OK)
+    _embed: Optional[Embed] = None
     _has_report: bool = False
 
     def __init__(self, settings: Settings):
@@ -90,7 +92,7 @@ class DiscordNotifier:
 
         webhook = SyncWebhook.from_url(self._settings.discord_webhook_url)
 
-        embed = disnake.Embed(
+        self._embed = disnake.Embed(
             title=self._title,
             description=self._desc,
             url=self._settings.ci_project_url,
@@ -98,7 +100,7 @@ class DiscordNotifier:
             timestamp=datetime.datetime.now(),
         )
 
-        embed.set_author(
+        self._embed.set_author(
             name="OWASP | DC Notifier - By GWS Garage",
             url=TEMP_URL,
             icon_url=GWS_ICON,
@@ -109,12 +111,12 @@ class DiscordNotifier:
         #     icon_url=TEMP_ICON,
         # )
 
-        embed.set_thumbnail(url=self._settings.dc_icon)
+        self._embed.set_thumbnail(url=self._settings.dc_icon)
         # embed.set_image(url=TEMP_BANNER)
 
         if counts:
             for count in counts:
-                embed.add_field(
+                self._embed.add_field(
                     name=count.capitalize(),
                     value=counts[count],
                     inline=True)
@@ -145,7 +147,7 @@ class DiscordNotifier:
                 if dep.scorev3 and dep.scorev3 != "Unknown":
                     cvssv3 = "{:.1f}".format(float(dep.scorev3))
 
-                embed.add_field(
+                self._embed.add_field(
                     name=f"{severity} - {dep.dependency} "
                     f"(ver: `{dep.version}`) "
                     f"CVSSv2: `{dep.scorev2}` "
@@ -155,7 +157,7 @@ class DiscordNotifier:
                     """,
                     inline=False)
 
-        webhook.send(embed=embed)
+        webhook.send(embed=self._embed)
         log("Notification sent.")
 
         return 0
