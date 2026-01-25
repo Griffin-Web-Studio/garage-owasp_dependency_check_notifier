@@ -85,8 +85,6 @@ class DiscordNotifier:
             self._has_vuln = True
 
         self._title = self._make_title(
-            has_vuln=self._has_vuln,
-            has_issue=self._has_issue,
             project_label=self._settings.project_label,
             branch=self._settings.ci_commit_ref_name)
 
@@ -183,18 +181,12 @@ class DiscordNotifier:
 
     def _make_title(
             self,
-            has_vuln: bool,
-            has_issue: bool,
             project_label: str,
             branch: str) -> str:
         """
         Method for generating title based on parser findings
 
-        :param self: ref to class elf
-        :param has_vuln: vulnerabilities found in report?
-        :type has_vuln: bool
-        :param has_issue: parser had issues?
-        :type has_issue: bool
+        :param self: ref to class self
         :param project_label: Project Label (defaults to project path)
         :type project_label: str
         :param branch: project branch
@@ -206,10 +198,10 @@ class DiscordNotifier:
         context: str = ""
         suffix: str = ""
 
-        if has_vuln:
+        if self._has_vuln:
             prefix = "🚨 Vulnerabilities detected"
             self._colour = state_colours(State.VULNERABLE)
-        elif has_issue:
+        elif self._has_issue:
             prefix = "⚠️ Dependency-Check scan issue"
             self._colour = state_colours(State.ISSUE)
         else:
