@@ -88,12 +88,7 @@ class DiscordNotifier:
         self._embed.set_thumbnail(url=self._settings.dc_icon)
         # embed.set_image(url=TEMP_BANNER)
 
-        if counts:
-            for count in counts:
-                self._embed.add_field(
-                    name=count.capitalize(),
-                    value=counts[count],
-                    inline=True)
+        self._embed_vuln_counter(counts=counts)
 
         if filtered:
             max_embed = 20
@@ -193,3 +188,25 @@ class DiscordNotifier:
             suffix = f" ({branch})"
 
         return prefix + suffix
+
+    def _embed_vuln_counter(
+            self,
+            counts: dict[str, int] | None) -> None:
+        """
+        Method for embedding vulnerability counter
+
+        :param self: ref to class self
+        :param counts: Key value pair of vuln level to integer count
+        :type counts: dict[str, int] | None
+        """
+
+        if counts and self._has_vuln and self._embed and not self._has_issue:
+            value = ""
+
+            for count in counts:
+                value += f"**{count.capitalize()}**: `{counts[count]}`\n"
+
+            self._embed.add_field(
+                name="Vulnerabilities Count",
+                value=value,
+                inline=False)
