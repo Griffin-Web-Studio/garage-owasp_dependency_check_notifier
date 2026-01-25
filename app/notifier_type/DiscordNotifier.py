@@ -138,7 +138,7 @@ class DiscordNotifier:
                 elif dep.severity.lower() == 'moderate':
                     severity = "🟧 Moderate"
                 elif dep.severity.lower() == 'high':
-                    severity = "🅾️ HIGHT"
+                    severity = "🅾️ HIGH"
                 elif dep.severity.lower() == 'critical':
                     severity = "📛 CRITICAL!!!"
 
