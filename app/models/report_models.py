@@ -162,7 +162,7 @@ class Vulnerability(BaseModel):
     unscored: Optional[str] = None
     severity: str
     cvssv3: Optional[Cvssv3] = None
-    cwes: List[str]
+    cwes: Optional[List[str]] = None
     description: str
     notes: str
     references: List[Reference]
