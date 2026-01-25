@@ -117,6 +117,9 @@ class Settings:
     _instance = None
     dc_icon: str
 
+    # Development behaviour
+    debugging: bool
+
     # Webhook
     discord_webhook_url: str
 
@@ -175,6 +178,9 @@ class Settings:
         :return: Settings class with values
         :rtype: Settings
         """
+        # Development
+        debugging = _parse_bool(os.getenv("DEBUGGING"), default=False)
+
         # Read raw envs once
         discord_webhook_url = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
         dc_icon = os.getenv(
@@ -274,6 +280,7 @@ class Settings:
             report_html = report_dir / report_html
 
         return Settings(
+            debugging=debugging,
             discord_webhook_url=discord_webhook_url,
             dc_icon=dc_icon,
             report_dir=report_dir,

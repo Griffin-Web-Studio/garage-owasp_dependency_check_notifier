@@ -14,7 +14,7 @@ def log(*args: str):
         print(*args)
 
 
-def err(*args: str):
+def err(*args: object):
     """
     Print err
 

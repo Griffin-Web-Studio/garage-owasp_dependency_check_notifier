@@ -5,8 +5,9 @@ Class holding the primary parsing logic of the OWASP Dependency Checker report
 import json
 from typing import Any, List, Optional
 from pydantic import BaseModel, ValidationError
-from app.models.report_models import DCModel
+import pprint
 
+from app.models.report_models import DCModel
 from settings import Settings
 from utils.common import err
 
@@ -47,11 +48,16 @@ class DCParser:
         try:
             raw = json.loads(self._settings.report_json.read_text())
             self._report = DCModel.model_validate(raw)
-        except ValidationError:
+        except ValidationError as e:
             err(
                 "Could not correctly validate the report schema against the",
                 "known model."
             )
+
+            if self._settings.debugging:
+                print("Validation Errors:")
+                pprint.pprint(e.errors())
+
             self.failed = True
 
     def _parse(self) -> Optional[DataPack]:
