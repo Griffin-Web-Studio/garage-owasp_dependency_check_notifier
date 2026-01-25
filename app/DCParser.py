@@ -71,6 +71,13 @@ class DCParser:
         if not self._report:
             return None
 
+        severity_order = {
+            "critical": 1,
+            "high": 2,
+            "moderate": 3,
+            "medium": 4,
+            "low": 5
+        }
         dependencies = self._report.dependencies
         vulns: List[Vulnerability] = []
 
@@ -119,6 +126,9 @@ class DCParser:
 
         for vuln in vulns:
             counts[vuln.severity] = counts.get(vuln.severity, 0) + 1
+
+        # Sort vulnerabilities by severity
+        vulns.sort(key=lambda v: severity_order.get(v.severity, float('inf')))
 
         return DataPack(vulnerabilities=vulns, counts=counts)
 
