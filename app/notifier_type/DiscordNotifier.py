@@ -17,11 +17,11 @@ TEMP_URL = "https://griffin-web.studio/"
 class DiscordNotifier:
     _settings: Settings
     _parser: Optional[DCParser]
-    _title: str
+    _title: str = ""
     _desc: str = ""
     _has_vuln: bool = False
     _has_issue: bool = False
-    _colour = state_colours(State.OK)
+    _colour = state_colours(State.ISSUE)
     _embed: Optional[Embed] = None
     _has_report: bool = False
     _webhook: SyncWebhook
