@@ -109,9 +109,7 @@ class DiscordNotifier:
                     [{", ".join(dep.ids)}]({dep.url})
                     """,
                     inline=False)
-
-        self._webhook.send(embed=self._embed)
-        log("Notification sent.")
+        self._send_notification()
 
         return 0
 
@@ -229,3 +227,11 @@ class DiscordNotifier:
                 name="Vulnerabilities Count",
                 value=value,
                 inline=False)
+
+    def _send_notification(self):
+        if self._embed:
+            self._webhook.send(embed=self._embed)
+            log("Notification sent.")
+            return
+
+        log("Notification not sent due to missing embeds.")
