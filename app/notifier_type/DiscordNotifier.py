@@ -131,7 +131,7 @@ class DiscordNotifier:
                 f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
             )
 
-            self._create_embed()
+            self._embed = self._create_embed()
             self._send_notification()
             raise FileNotFoundError(
                 f"The file '{self._settings.report_json}' does not exist.")
