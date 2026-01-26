@@ -70,41 +70,8 @@ class DiscordNotifier:
 
         self._embed_vuln_counter(counts=counts)
 
-        if filtered:
-            max_embed = 20
+        self._embed_vuln_fields(vulns=filtered)
 
-            for dep in filtered:
-                if max_embed == 0:
-                    break
-
-                max_embed -= 1
-
-                severity = "N/A"
-                cvssv3 = "n/a"
-
-                if dep.severity.lower() == 'low':
-                    severity = "🟩 Low"
-                elif dep.severity.lower() == 'medium':
-                    severity = "🟨 Medium"
-                elif dep.severity.lower() == 'moderate':
-                    severity = "🟧 Moderate"
-                elif dep.severity.lower() == 'high':
-                    severity = "🅾️ HIGH"
-                elif dep.severity.lower() == 'critical':
-                    severity = "📛 CRITICAL!!!"
-
-                if dep.scorev3 and dep.scorev3 != "Unknown":
-                    cvssv3 = "{:.1f}".format(float(dep.scorev3))
-
-                self._embed.add_field(
-                    name=f"{severity} - {dep.dependency} "
-                    f"(ver: `{dep.version}`) "
-                    f"CVSSv2: `{dep.scorev2}` "
-                    f"CVSSv3: `{cvssv3}`",
-                    value=f"""
-                    [{", ".join(dep.ids)}]({dep.url})
-                    """,
-                    inline=False)
         self._send_notification()
 
         return 0
@@ -256,6 +223,43 @@ class DiscordNotifier:
                 name="Vulnerabilities Count",
                 value=value,
                 inline=False)
+
+    def _embed_vuln_fields(self, vulns: Optional[List[Vulnerability]]):
+        if vulns and self._embed:
+            max_embed = 20
+
+            for dep in vulns:
+                if max_embed == 0:
+                    break
+
+                max_embed -= 1
+
+                severity = "N/A"
+                cvssv3 = "n/a"
+
+                if dep.severity.lower() == 'low':
+                    severity = "🟩 Low"
+                elif dep.severity.lower() == 'medium':
+                    severity = "🟨 Medium"
+                elif dep.severity.lower() == 'moderate':
+                    severity = "🟧 Moderate"
+                elif dep.severity.lower() == 'high':
+                    severity = "🅾️ HIGH"
+                elif dep.severity.lower() == 'critical':
+                    severity = "📛 CRITICAL!!!"
+
+                if dep.scorev3 and dep.scorev3 != "Unknown":
+                    cvssv3 = "{:.1f}".format(float(dep.scorev3))
+
+                self._embed.add_field(
+                    name=f"{severity} - {dep.dependency} "
+                    f"(ver: `{dep.version}`) "
+                    f"CVSSv2: `{dep.scorev2}` "
+                    f"CVSSv3: `{cvssv3}`",
+                    value=f"""
+                    [{", ".join(dep.ids)}]({dep.url})
+                    """,
+                    inline=False)
 
     def _send_notification(self):
         """
