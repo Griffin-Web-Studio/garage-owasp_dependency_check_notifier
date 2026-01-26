@@ -152,7 +152,9 @@ class DiscordNotifier:
             self._has_vuln = False
             self._desc = (
                 f"Parser Experienced some issue `"
-                f"{self._settings.ci_project_path or self._settings.project_label or 'project'}"
+                f"{self._settings.ci_project_path
+                   or self._settings.project_label
+                   or 'project'}"
                 f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
             )
             self._embed = self._create_embed()
