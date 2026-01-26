@@ -67,31 +67,7 @@ class DiscordNotifier:
         if counts and (counts["critical"] > 0 or counts["high"]) > 0:
             self._has_vuln = True
 
-        self._title = self._make_title(
-            project_label=self._settings.project_label,
-            branch=self._settings.ci_commit_ref_name)
-
-        self._embed = disnake.Embed(
-            title=self._title,
-            description=self._desc,
-            url=self._settings.ci_project_url,
-            color=self._colour,
-            timestamp=datetime.datetime.now(),
-        )
-
-        self._embed.set_author(
-            name="OWASP | DC Notifier - By GWS Garage",
-            url=TEMP_URL,
-            icon_url=GWS_ICON,
-        )
-
-        # embed.set_footer(
-        #     text="Embed Footer",
-        #     icon_url=TEMP_ICON,
-        # )
-
-        self._embed.set_thumbnail(url=self._settings.dc_icon)
-        # embed.set_image(url=TEMP_BANNER)
+        self._embed = self._create_embed()
 
         self._embed_vuln_counter(counts=counts)
 
@@ -153,7 +129,36 @@ class DiscordNotifier:
                 f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
             )
 
-        self._has_report = True
+    def _create_embed(self):
+        """
+        Method to Create the embed
+
+        :param self: reference to self
+        """
+        embed = disnake.Embed(
+            title=self._make_title(
+                project_label=self._settings.project_label,
+                branch=self._settings.ci_commit_ref_name),
+            description=self._desc,
+            url=self._settings.ci_project_url,
+            color=self._colour,
+            timestamp=datetime.datetime.now(),
+        )
+
+        embed.set_author(
+            name="OWASP | DC Notifier - By GWS Garage",
+            url=TEMP_URL,
+            icon_url=GWS_ICON,
+        )
+
+        # embed.set_footer(
+        #     text="Embed Footer",
+        #     icon_url=TEMP_ICON,
+        # )
+
+        embed.set_thumbnail(url=self._settings.dc_icon)
+        # embed.set_image(url=TEMP_BANNER)
+        return embed
 
     def _make_title(
             self,
