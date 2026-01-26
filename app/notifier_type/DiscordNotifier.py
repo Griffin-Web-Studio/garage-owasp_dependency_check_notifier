@@ -16,6 +16,7 @@ TEMP_URL = "https://griffin-web.studio/"
 
 class DiscordNotifier:
     _settings: Settings
+    _parser: Optional[DCParser]
     _title: str
     _desc: str = ""
     _has_vuln: bool = False
@@ -24,21 +25,24 @@ class DiscordNotifier:
     _embed: Optional[Embed] = None
     _has_report: bool = False
 
-    def __init__(self, settings: Settings):
+    def __init__(self, settings: Settings, parser: Optional[DCParser]):
         """
         Discord Notifier module initialiser for sending out Discord embeds
 
         :param self: ref to class self
         :param settings: settings derived from env vars
         :type settings: Settings
+        :param parser: Dependency Vulnerability Report Parser
+        :type parser: Optional[DCParser]
         """
         self._settings = settings
+        self._parser = parser
         # If JSON missing, report an issue
         self._check_report_presence()
 
-    def notify(self, parser: DCParser | None):
+    def notify(self):
 
-        if parser and parser.failed:
+        if self._parser and self._parser.failed:
             self._has_issue = True
             self._has_vuln = False
             self._desc = (
@@ -50,11 +54,11 @@ class DiscordNotifier:
         filtered = None
         counts = None
 
-        if parser:
-            data_pack = parser.get_data()
+        if self._parser:
+            data_pack = self._parser.get_data()
             if data_pack and data_pack.counts:
                 counts = data_pack.counts
-            filtered = parser.filter_by_min_severity(
+            filtered = self._parser.filter_by_min_severity(
                 self._settings.min_severity)
 
         if counts and (counts["critical"] > 0 or counts["high"]) > 0:
