@@ -10,7 +10,7 @@ from settings import Settings
 from utils.common import err, log
 
 GWS_ICON = "https://files.gwssecureserver.co.uk/files/gws/logo-outline-ico.png"
-# TEMP_BANNER = "https://files.gwssecureserver.co.uk/files/email/v4/offer.png"
+GWS_BANNER = "https://files.gwssecureserver.co.uk/files/email/v4/offer.png"
 TEMP_URL = "https://griffin-web.studio/"
 
 
@@ -180,17 +180,18 @@ class DiscordNotifier:
         )
 
         embed.set_author(
-            name="OWASP | DC Notifier - By GWS Garage",
+            name="OWASP | DC Notifier",
             url=TEMP_URL,
+            icon_url=self._settings.dc_icon,
+        )
+
+        embed.set_footer(
+            text="Developed by GWS Garage - https://griffin-web.studio",
             icon_url=GWS_ICON,
         )
 
-        # embed.set_footer(
-        #     text="Embed Footer",
-        #     icon_url=TEMP_ICON,
-        # )
-
-        embed.set_thumbnail(url=self._settings.dc_icon)
+        embed.set_thumbnail(
+            url=GWS_ICON)
         # embed.set_image(url=TEMP_BANNER)
         return embed
 
