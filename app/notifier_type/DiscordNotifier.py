@@ -24,6 +24,7 @@ class DiscordNotifier:
     _colour = state_colours(State.OK)
     _embed: Optional[Embed] = None
     _has_report: bool = False
+    _webhook: SyncWebhook
 
     def __init__(self, settings: Settings, parser: Optional[DCParser]):
         """
@@ -37,6 +38,8 @@ class DiscordNotifier:
         """
         self._settings = settings
         self._parser = parser
+        self._webhook = SyncWebhook.from_url(
+            self._settings.discord_webhook_url)
         # If JSON missing, report an issue
         self._check_report_presence()
 
@@ -67,8 +70,6 @@ class DiscordNotifier:
         self._title = self._make_title(
             project_label=self._settings.project_label,
             branch=self._settings.ci_commit_ref_name)
-
-        webhook = SyncWebhook.from_url(self._settings.discord_webhook_url)
 
         self._embed = disnake.Embed(
             title=self._title,
@@ -130,7 +131,7 @@ class DiscordNotifier:
                     """,
                     inline=False)
 
-        webhook.send(embed=self._embed)
+        self._webhook.send(embed=self._embed)
         log("Notification sent.")
 
         return 0
