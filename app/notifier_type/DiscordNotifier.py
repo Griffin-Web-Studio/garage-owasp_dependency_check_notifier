@@ -7,7 +7,7 @@ from disnake import SyncWebhook, Embed
 from app.DCParser import DCParser
 from app.notifier_type.utils import State, state_colours
 from settings import Settings
-from utils.common import log
+from utils.common import err, log
 
 GWS_ICON = "https://files.gwssecureserver.co.uk/files/gws/logo-outline-ico.png"
 # TEMP_BANNER = "https://files.gwssecureserver.co.uk/files/email/v4/offer.png"
@@ -40,10 +40,13 @@ class DiscordNotifier:
         self._parser = parser
         self._webhook = SyncWebhook.from_url(
             self._settings.discord_webhook_url)
-        # If JSON missing, report an issue
-        self._check_report_presence()
 
     def notify(self):
+        try:
+            self._check_report_presence()
+        except FileNotFoundError as e:
+            err(e)
+            return 0
 
         if self._parser and self._parser.failed:
             self._has_issue = True
@@ -117,6 +120,7 @@ class DiscordNotifier:
         Method to determine if report file is present
 
         :param self: ref to class self
+        :raises FileNotFoundError: Missing file
         """
         if not self._settings.report_json.exists():
             self._has_issue = True
@@ -128,6 +132,11 @@ class DiscordNotifier:
                    or 'project'}"
                 f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
             )
+
+            self._create_embed()
+            self._send_notification()
+            raise FileNotFoundError(
+                f"The file '{self._settings.report_json}' does not exist.")
 
     def _create_embed(self):
         """
