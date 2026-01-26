@@ -1,12 +1,12 @@
 from __future__ import annotations
 import datetime
-from typing import Optional
+from typing import List, Optional
 import disnake
 from disnake import SyncWebhook, Embed
 
-from app.DCParser import DCParser
+from app.DCParser import DCParser, Vulnerability
 from app.notifier_type.utils import State, state_colours
-from settings import Settings
+from settings import Settings, Severity
 from utils.common import err, log
 
 GWS_ICON = "https://files.gwssecureserver.co.uk/files/gws/logo-outline-ico.png"
@@ -60,15 +60,8 @@ class DiscordNotifier:
             err("Parser Error: ", e)
             return 0
 
-        filtered = None
-        counts = None
-
-        if self._parser:
-            data_pack = self._parser.get_data()
-            if data_pack and data_pack.counts:
-                counts = data_pack.counts
-            filtered = self._parser.filter_by_min_severity(
-                self._settings.min_severity)
+        counts = self._get_vuln_counts()
+        filtered = self._get_vuln_above_lvl()
 
         if counts and (counts["critical"] > 0 or counts["high"]) > 0:
             self._has_vuln = True
@@ -265,9 +258,33 @@ class DiscordNotifier:
                 inline=False)
 
     def _send_notification(self):
+        """
+        TODO: add doccomments and types
+        """
         if self._embed:
             self._webhook.send(embed=self._embed)
             log("Notification sent.")
             return
 
         log("Notification not sent due to missing embeds.")
+
+    def _get_vuln_counts(self):
+        """
+        TODO: add doccomments and types
+        """
+        if self._parser:
+            data_pack = self._parser.get_data()
+
+            if data_pack and data_pack.counts:
+                return data_pack.counts
+
+    def _get_vuln_above_lvl(
+        self,
+        severity: Optional[Severity] = None
+    ) -> Optional[List[Vulnerability]]:
+        """
+        TODO: add doccomments and types
+        """
+        if self._parser:
+            return self._parser.filter_by_min_severity(
+                severity or self._settings.min_severity)
