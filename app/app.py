@@ -22,8 +22,8 @@ def run_notifier(settings: Settings) -> int:
             str(settings.report_json))
 
     if settings.discord_webhook_url:
-        notifier = DiscordNotifier(settings)
+        notifier = DiscordNotifier(settings, parser)
 
-        return notifier.notify(parser)
+        return notifier.notify()
 
     return 0
