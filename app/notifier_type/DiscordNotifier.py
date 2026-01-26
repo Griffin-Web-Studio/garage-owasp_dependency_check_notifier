@@ -214,8 +214,16 @@ class DiscordNotifier:
         if self._has_vuln:
             prefix = "🚨 Vulnerabilities detected"
             self._colour = state_colours(State.VULNERABLE)
+
         elif self._has_issue:
-            prefix = "⚠️ Dependency-Check scan issue"
+            prefix = "⚠️ Dependency-Check __Unknown Issue__"
+
+            if not self._settings.report_json.exists():
+                prefix = "⚠️ Dependency-Check __JSON Report Missing__"
+
+            if self._parser and self._parser.failed:
+                prefix = "⚠️ Dependency-Check __Parser Failed__"
+
             self._colour = state_colours(State.ISSUE)
         else:
             prefix = "✅ No vulnerabilities detected"
