@@ -14,6 +14,14 @@ GWS_ICON = "https://files.gwssecureserver.co.uk/files/gws/logo-outline-ico.png"
 TEMP_URL = "https://griffin-web.studio/"
 
 
+class ParserFailedError(Exception):
+    """Raise exception if Parser Failed."""
+
+    def __init__(self, message: str):
+        super().__init__(message)
+        self.message = message
+
+
 class DiscordNotifier:
     _settings: Settings
     _parser: Optional[DCParser]
@@ -44,18 +52,13 @@ class DiscordNotifier:
     def notify(self):
         try:
             self._check_report_presence()
+            self._check_parser_success()
         except FileNotFoundError as e:
-            err(e)
+            err("Report not found: ", e)
             return 0
-
-        if self._parser and self._parser.failed:
-            self._has_issue = True
-            self._has_vuln = False
-            self._desc = (
-                f"Parser Experienced some issue `"
-                f"{self._settings.ci_project_path or self._settings.project_label or 'project'}"
-                f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
-            )
+        except ParserFailedError as e:
+            err("Parser Error: ", e)
+            return 0
 
         filtered = None
         counts = None
@@ -135,6 +138,28 @@ class DiscordNotifier:
             self._send_notification()
             raise FileNotFoundError(
                 f"The file '{self._settings.report_json}' does not exist.")
+
+    def _check_parser_success(self) -> None:
+        """
+        Method to determine if parser had failed to parse the report
+
+        :param self: ref to class self
+        :raises ParserFailedError: Parser Failure
+        """
+
+        if self._parser and self._parser.failed:
+            self._has_issue = True
+            self._has_vuln = False
+            self._desc = (
+                f"Parser Experienced some issue `"
+                f"{self._settings.ci_project_path or self._settings.project_label or 'project'}"
+                f"` (`{self._settings.ci_commit_ref_name or 'ref'}`)."
+            )
+            self._embed = self._create_embed()
+            self._send_notification()
+            raise ParserFailedError(
+                "The parser experienced error while parsing "
+                f"'{self._settings.report_json}'")
 
     def _create_embed(self):
         """
