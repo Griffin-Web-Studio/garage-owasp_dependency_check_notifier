@@ -8,7 +8,7 @@ class State(Enum):
     VULNERABLE = "vulnerable"
 
 
-def state_colours(state: State | None) -> Colour:
+def state_colour(state: State | None) -> Colour:
     """
     Discord embed colour
 

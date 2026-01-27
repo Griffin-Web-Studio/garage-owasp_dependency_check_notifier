@@ -5,7 +5,7 @@ import disnake
 from disnake import SyncWebhook, Embed
 
 from app.DCParser import DCParser, Vulnerability
-from app.notifier_type.utils import State, state_colours
+from app.notifier_type.utils import State, state_colour
 from settings import Settings, Severity
 from utils.common import err, log
 
@@ -29,7 +29,7 @@ class DiscordNotifier:
     _desc: str = ""
     _has_vuln: bool = False
     _has_issue: bool = False
-    _colour = state_colours(State.ISSUE)
+    _colour = state_colour(State.ISSUE)
     _embed: Optional[Embed] = None
     _has_report: bool = False
     _webhook: SyncWebhook
@@ -176,7 +176,7 @@ class DiscordNotifier:
 
         if self._has_vuln:
             prefix = "🚨 Vulnerabilities detected"
-            self._colour = state_colours(State.VULNERABLE)
+            self._colour = state_colour(State.VULNERABLE)
 
         elif self._has_issue:
             prefix = "⚠️ Dependency-Check __Unknown Issue__"
@@ -187,7 +187,7 @@ class DiscordNotifier:
             if self._parser and self._parser.failed:
                 prefix = "⚠️ Dependency-Check __Parser Failed__"
 
-            self._colour = state_colours(State.ISSUE)
+            self._colour = state_colour(State.ISSUE)
         else:
             prefix = "✅ No vulnerabilities detected"
 
