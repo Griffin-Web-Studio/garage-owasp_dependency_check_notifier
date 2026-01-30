@@ -23,7 +23,8 @@
 				"eamodio.gitlens",
 				"tal7aouy.icons",
 				"SonarSource.sonarlint-vscode",
-				"MASSHUU12.too-long-line-limit"
+				"MASSHUU12.too-long-line-limit",
+				"rodolphebarbanneau.python-docstring-highlighter"
 			]
 		}
 	}
