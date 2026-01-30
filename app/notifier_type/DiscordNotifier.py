@@ -225,6 +225,14 @@ class DiscordNotifier:
                 inline=False)
 
     def _embed_vuln_fields(self, vulns: Optional[List[Vulnerability]]):
+        """
+        Method for embedding vulnerability fields
+
+        :param self: ref to class self
+        :param vulns: List of vulnerabilities
+        :type vulns: Optional[List[Vulnerability]]
+        """
+
         if vulns and self._embed:
             max_embed = 20
 
@@ -263,7 +271,9 @@ class DiscordNotifier:
 
     def _send_notification(self):
         """
-        TODO: add doccomments and types
+        Method for sending notifications
+
+        :param self: ref to class self
         """
         if self._embed:
             self._webhook.send(embed=self._embed)
@@ -274,7 +284,9 @@ class DiscordNotifier:
 
     def _get_vuln_counts(self):
         """
-        TODO: add doccomments and types
+        Method for getting the vulnerability counts
+
+        :param self: ref to class self
         """
         if self._parser:
             data_pack = self._parser.get_data()
@@ -287,7 +299,13 @@ class DiscordNotifier:
         severity: Optional[Severity] = None
     ) -> Optional[List[Vulnerability]]:
         """
-        TODO: add doccomments and types
+        Method to filter out vulnerabilities below threshold
+
+        :param self: ref to class self
+        :param severity: Minimum Severity level
+        :type severity: Optional[Severity]
+        :return: list of vulnerabilities after filtration
+        :rtype: List[Vulnerability] | None
         """
         if self._parser:
             return self._parser.filter_by_min_severity(

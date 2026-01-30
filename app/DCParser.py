@@ -145,6 +145,15 @@ class DCParser:
     def filter_by_min_severity(
             self,
             min_sev: str) -> Optional[List[Vulnerability]]:
+        """
+        Method to filter vulnerabilities below a curtain threshold
+
+        :param self: ref to class self
+        :param min_sev: Minimum severity to start including from
+        :type min_sev: str
+        :return: list of vulnerabilities after filtration
+        :rtype: List[Vulnerability] | None
+        """
         vulns = self._data
         if not vulns:
             return None
