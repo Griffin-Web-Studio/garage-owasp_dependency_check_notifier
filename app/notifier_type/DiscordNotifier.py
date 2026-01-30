@@ -280,7 +280,7 @@ class DiscordNotifier:
             log("Notification sent.")
             return
 
-        log("Notification not sent due to missing embeds.")
+        err("Notification not sent due to missing embeds.")
 
     def _get_vuln_counts(self):
         """
